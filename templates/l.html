@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+    <script>
+        var convertData = function (dat, dst) {
+            var res = [];
+            for (var i = 0; i < dat.length; i++) {
+
+                var fromCoord = dat[i];
+                var toCoord = dst[i];
+                if (fromCoord && toCoord) {
+                    res.push({
+                        coords: [fromCoord, toCoord]
+                    });
+                }
+            }
+            return res;
+        };
+        var dat = [[0.03278507618237869, 0.9445139627545972]];
+        var dst = [[0.6798397473792728,0.8267106332685873]];
+        re = convertData(dat, dst);
+        $(document).ready(function(){
+        $("#btn1").click(function(){
+            alert(re[0].coords.join())
+            $("#test1").text(re[0].coords.join());
+        });
+        });
+    </script>
+    <p id="test1">jjjjjjj</p>
+    <h4>hello</h4>
+    <button id="btn1">设置文本</button>
+</body>
+</html>

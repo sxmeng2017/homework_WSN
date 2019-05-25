@@ -1,0 +1,18 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - 初始界面</title>
+      {% else %}
+      <title>Welcome to 测试界面</title>
+      {% endif %}
+        {% block head_ %}{% endblock %}
+    </head>
+    <body>
+        <div>Microblog: <a href="/index">Home</a></div><br>
+        <div>leach仿真: <a href="/leach_data">LEACH</a></div><br>
+        <div>阿米娅是不是驴？: <a href="/predict">开始迫害</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+
+    </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+
+</head>
+<body>
+    <h1>仿真界面</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.data.label }}<br>
+            {{ form.data(size=32) }}<br>
+            {% for error in form.data.errors%}
+            <span style="color:red;">{{ error }}</span>
+            {% endfor %}
+
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <div id="main" style="width: 500px;height:500px;"></div>
+    <script type="text/javascript">
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        var ten = function(dat){
+            var res = [];
+            for (var i = 0; i< dat.length;i++){
+                var r = dat[i]*500;
+                res.push(r);
+            }
+            return res
+        };
+        var convertData = function (dat, dst) {
+            var res = [];
+            for (var i = 0; i < dat.length; i++) {
+
+                var fromCoord = ten(dat[i]);
+                var toCoord = ten(dst[i]);
+                if (fromCoord && toCoord) {
+                    res.push({
+                        coords: [fromCoord, toCoord]
+                    });
+                }
+            }
+            return res;
+        };
+
+
+    //series: series
+
+        // 使用刚指定的配置项和数据显示图表。
+        //myChart.setOption(option);
+
+        // 使用ajax进行修改
+        function myfun(){
+            var d = [];
+            var series = [];
+            var lun = $('#data').val()
+            $.ajax({
+                type:'POST',
+                data: {'data': lun},
+                dataType:'json',
+                success: function(dat){
+                    var d_ = dat.data;
+                    var d_st = dat.dst;
+                    r = convertData(d_, d_st)
+                    var series = [];
+                    series.push(
+                        {
+
+                            type: 'lines',
+                            //zlevel: 2,
+                            //symbol: ['none', 'arrow'],
+                            symbolSize: 10,
+                            lineStyle: {
+                                normal: {
+
+                                    width: 1,
+                                    opacity: 0.9,
+                                    curveness: 0.0
+                                }
+                            },
+                            data: r
+                        }
+
+                    );
+                    option = {
+                        backgroundColor: '#404a59',
+                        title : {
+                            text: '模拟迁徙',
+                            subtext: '数据纯属虚构',
+                            left: 'center',
+                            textStyle : {
+                                color: '#fff'
+                            }
+                        },
+                        geo: {
+
+
+                        },
+                        series: series
+                    };
+                    myChart.setOption(option);
+                    alert(r[0].coords.join());
+                    //$("#test1").text(r[0].coords.join());
+                },
+                error: function(data){
+                    alert('error');
+                }
+            });
+
+
+        }
+
+
+
+
+
+    </script>
+    <h2>ajax</h2>
+    <button id="request" onclick="myfun()"> 数据</button>
+    <p id="test1">ceshi</p>
+</body>
+</html>
