@@ -1,33 +1,28 @@
 import matplotlib
 matplotlib.use('Agg')
+import os
 from flask import Flask
 from flask import render_template, flash, redirect,url_for, session, jsonify
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from flask import request
 from config import Config
-from form import LoginForm, DataForm
+from form import LoginForm, DataForm, UploadForm
 from Leach import result
-from time import sleep
+import cv2
+from amiya import perd
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
+basedir = os.path.abspath(os.path.dirname(__file__))
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app, photos)
+patch_request_class(app)
 
 #@app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-
-    user = {'username': 'Miguel'}
-    posts = [
-        {
-            'author': {'username': 'john'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title='Home', user=user, posts=posts)
+    return render_template('index.html')
 
 
 @app.route('/user/<name>')
@@ -35,7 +30,7 @@ def user(name):
     return '<h1>hello!,{}!</h1>'.format(name)
 
 
-#@app.route('/')
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -44,29 +39,6 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
-
-@app.route('/chart')
-def chart():
-    return render_template('chart.html')
-
-@app.route('/')
-@app.route('/leach_data', methods=['GET'])
-def leach_data():
-    form = DataForm()
-    return render_template('leach_data.html', form=form)
-
-@app.route('/leach_data', methods=['POST'])
-def leach_data_():
-    form = DataForm()
-    if form.validate_on_submit():
-        r = form.data.data
-        data = result(r)
-        post = {
-            'r': r,
-            'data': data
-        }
-        session['leach_data'] = post
-        return redirect(url_for('leach'))
 
 @app.route('/combine', methods=['GET'])
 def combine():
@@ -81,10 +53,16 @@ def combine_post():
         data, dst = result(r)
         return jsonify(data=data, dst=dst)
 
-
-@app.route('/leach', methods=['GET', 'POST'])
-def leach():
-    return render_template('leach.html', post=session['leach_data'])
+@app.route('/predict_load', methods=['GET', 'POST'])
+def predict_load():
+    form = UploadForm()
+    if form.validate_on_submit():
+        filename = photos.save(form.photo.data)
+        file_url = photos.url(filename)
+        res = perd(basedir + "/static/image/" + filename)[0][0]
+    else:
+        file_url, res= None, None
+    return render_template('predict_load.html', form=form, file_url=file_url, res=res)
 
 
 if __name__ == '__main__':

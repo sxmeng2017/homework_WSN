@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head_ %}
+    <b> 你好！，欢迎来到虚假的阿米娅厨制作的网页</b><br>
+    <h4>在这里你可以选择使用进行LEACH模拟，和阿米娅的预测</h4><br>
+    <h4> 如果期待更多功能可以与开发者联系！</h4>
+{% endblock %}
+{% block content %}
+    <div>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {{ form.photo }}
+            {% for error in form.photo.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+            {{ form.submit }}
+        </form>
+        {% if file_url %}
+            <br><img src="{{ file_url }}">
+        {% endif %}
+        {% if res %}
+            <br><h4 id="#result">{{ res }}</h4>
+        {% endif %}
+    </div>
+{% endblock %}

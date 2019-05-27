@@ -6,11 +6,25 @@
       <title>Welcome to 测试界面</title>
       {% endif %}
         {% block head_ %}{% endblock %}
+      <style>
+          body
+          {
+            background-image: url(http://127.0.0.1:5000/static/d5f00ff8542fea3845283c60aafd9922.jpg);
+            height:100%;
+            width:100%;
+            overflow:hidden;
+            background-size:cover;
+          }
+          div
+          {
+            background-color: yellow;
+          }
+      </style>
     </head>
     <body>
-        <div>Microblog: <a href="/index">Home</a></div><br>
-        <div>leach仿真: <a href="/leach_data">LEACH</a></div><br>
-        <div>阿米娅是不是驴？: <a href="/predict">开始迫害</a></div>
+        <div>划划划划水: <a href={{ url_for("index") }}>Home</a></div><br>
+        <div>leach仿真: <a href="/combine">LEACH</a></div><br>
+        <div>阿米娅是不是驴？: <a href="/predict_load">开始迫害</a></div>
         <hr>
         {% block content %}{% endblock %}
 

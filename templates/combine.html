@@ -6,7 +6,21 @@
     <title>Title</title>
     <script src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <style>
+          body
+          {
+            background-image: url(http://127.0.0.1:5000/static/d5f00ff8542fea3845283c60aafd9922.jpg);
+            height:100%;
+            width:100%;
+            overflow:hidden;
+            background-size:cover;
+          }
+          div
+          {
+            background-color: white;
+          }
 
+     </style>
 </head>
 <body>
     <h1>仿真界面</h1>
@@ -93,7 +107,7 @@
                     option = {
                         backgroundColor: '#404a59',
                         title : {
-                            text: '模拟迁徙',
+                            text: 'LEACH模拟',
                             subtext: '数据纯属虚构',
                             left: 'center',
                             textStyle : {
@@ -107,7 +121,7 @@
                         series: series
                     };
                     myChart.setOption(option);
-                    alert(r[0].coords.join());
+                    alert(模拟完毕);
                     //$("#test1").text(r[0].coords.join());
                 },
                 error: function(data){
